@@ -1,5 +1,5 @@
 ---
-title: "FinalProject"
+title: "Los Angeles Crime Statistics"
 output: html_document
 date: "2024-03-27"
 ---
@@ -10,13 +10,44 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+**Zane, Cameron, Josh, Nicholas, Niraj**
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+For our project, we retrieved a data set from https://catalog.data.gov/dataset/crime-data-from-2020-to-present.
 
-```{r cars}
+This data set reflects incidents of crime in the city of Los Angeles dating back to 2020. There were originally over 918,000 rows, which we have brought down to 200,000 to make it easier to work with. This is still a very large data set. A description of the dataset and each column can be found at https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data.
+
+```{r max.print=10}
 library(dplyr)
 
-crime <- read.csv("https://catalog.data.gov/dataset/crime-data-from-2020-to-present")
-crime
+crimes <- read.csv("https://raw.githubusercontent.com/ZaneE5/ds202finalproject/main/crimes.csv")
+
+crimes %>% head()
 ```
+
+**Our questions:**
+
+- What is the most likely victim demographic based on crime committed? 
+
+- Is there a significant change in type of crime committed based on time or location?
+
+- What is the relationship between the date the crime occurred the date it was reported?
+
+- What kinds of weapons are used the most and in what crimes?
+
+
+To clean the data, we will remove unecessary columns, fix/remove the data that is incomplete/missing, and format the columns to make them easier to work with.
+
+```{r}
+#data cleaning steps here
+
+
+```
+
+
+After cleaning, we want to get some of the basic information about the dataset.
+
+```{r}
+#marginal summaries
+dim(crimes)
+```
+

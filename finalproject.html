@@ -358,8 +358,12 @@ display: none;
 <div id="r-markdown" class="section level2">
 <h2>R Markdown</h2>
 <p><strong>Zane, Cameron, Josh, Nicholas, Niraj</strong></p>
-<p>Question draft: What is the victim demographic based on crime
-committed and is there a change based on time or location?</p>
+<p>For our project, we retrieved a data set from <a href="https://catalog.data.gov/dataset/crime-data-from-2020-to-present" class="uri">https://catalog.data.gov/dataset/crime-data-from-2020-to-present</a>.</p>
+<p>This data set reflects incidents of crime in the city of Los Angeles
+dating back to 2020. There were originally over 918,000 rows, which we
+have brought down to 200,000 to make it easier to work with. This is
+still a very large data set. A description of the dataset and each
+column can be found at <a href="https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data" class="uri">https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data</a>.</p>
 <pre class="r"><code>library(dplyr)</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;dplyr&#39;</code></pre>
@@ -369,6 +373,12 @@ committed and is there a change based on time or location?</p>
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(lubridate)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     date, intersect, setdiff, union</code></pre>
 <pre class="r"><code>crimes &lt;- read.csv(&quot;https://raw.githubusercontent.com/ZaneE5/ds202finalproject/main/crimes.csv&quot;)
 
 crimes %&gt;% head()</code></pre>
@@ -414,6 +424,52 @@ crimes %&gt;% head()</code></pre>
 ## 4 14000    RIVERSIDE                    DR              34.1576 -118.4387
 ## 5                        1900    TRANSIENT              34.0944 -118.3277
 ## 6  9900    COMPTON                      AV              33.9467 -118.2463</code></pre>
+<p><strong>Our questions:</strong></p>
+<ul>
+<li><p>What is the most likely victim demographic based on crime
+committed?</p></li>
+<li><p>Is there a significant change in type of crime committed based on
+time or location?</p></li>
+<li><p>What is the relationship between the date the crime occurred the
+date it was reported?</p></li>
+<li><p>What kinds of weapons are used the most and in what
+crimes?</p></li>
+</ul>
+<p>To clean the data, we will remove unecessary columns, fix/remove the
+data that is incomplete/missing, and format the columns to make them
+easier to work with.</p>
+<pre class="r"><code>#data cleaning steps here
+
+#Columns DR_NO is meaningless to us
+#Columns Part.1.2, Premis.Cd, Weapon.Used.Cd, and Mocodes could be useful but we do not know what these columns/codes mean, even with the column descriptions.
+#Crm.Cd.1 is the same as Crm.Cd, and we are not interested in Crm.Cd.2-4
+#So we remove all these columns to reduce the data to only what we care about
+
+crimes &lt;- select(crimes, c(&quot;Date.Rptd&quot;, &quot;DATE.OCC&quot;, &quot;TIME.OCC&quot;, &quot;AREA&quot;, &quot;AREA.NAME&quot;, &quot;Rpt.Dist.No&quot;, &quot;Crm.Cd&quot;, &quot;Crm.Cd.Desc&quot;, &quot;Vict.Age&quot;, &quot;Vict.Sex&quot;, &quot;Vict.Descent&quot;, &quot;Premis.Desc&quot;, &quot;Weapon.Desc&quot;, &quot;Status&quot;, &quot;Status.Desc&quot;, &quot;LOCATION&quot;, &quot;Cross.Street&quot;, &quot;LAT&quot;, &quot;LON&quot;))
+
+#We change some of the chr columns into factors for ease of grouping later
+crimes$AREA.NAME &lt;- factor(crimes$AREA.NAME, unique(crimes[,&#39;AREA.NAME&#39;]))
+crimes$Crm.Cd.Desc &lt;- factor(crimes$Crm.Cd.Desc, unique(crimes[,&#39;Crm.Cd.Desc&#39;]))
+crimes$Vict.Sex &lt;- factor(crimes$Vict.Sex, unique(crimes[,&#39;Vict.Sex&#39;]))
+crimes$Vict.Descent &lt;- factor(crimes$Vict.Descent, unique(crimes[,&#39;Vict.Descent&#39;]))
+crimes$Premis.Desc &lt;- factor(crimes$Premis.Desc, unique(crimes[,&#39;Premis.Desc&#39;]))
+crimes$Weapon.Desc &lt;- factor(crimes$Weapon.Desc, unique(crimes[,&#39;Weapon.Desc&#39;]))
+crimes$Status &lt;- factor(crimes$Status, unique(crimes[,&#39;Status&#39;]))
+crimes$Status.Desc &lt;- factor(crimes$Status.Desc, unique(crimes[,&#39;Status.Desc&#39;]))
+crimes$LOCATION &lt;- factor(crimes$LOCATION, unique(crimes[,&#39;LOCATION&#39;]))
+crimes$Cross.Street &lt;- factor(crimes$Cross.Street, unique(crimes[,&#39;Cross.Street&#39;]))
+
+#We do a little cleaning on the dates to remove the unecessary 0:00 times
+crimes$DATE.OCC &lt;- mdy_hm(crimes$DATE.OCC, tz = &quot;America/Los_Angeles&quot;)
+
+crimes$DATE.OCC %&gt;% head()</code></pre>
+<pre><code>## [1] &quot;2020-03-01 PST&quot; &quot;2020-02-08 PST&quot; &quot;2020-11-04 PST&quot; &quot;2020-03-10 PDT&quot;
+## [5] &quot;2020-08-17 PDT&quot; &quot;2020-12-01 PST&quot;</code></pre>
+<p>After cleaning, we want to get some of the basic information about
+the dataset.</p>
+<pre class="r"><code>#marginal summaries
+dim(crimes)</code></pre>
+<pre><code>## [1] 200000     19</code></pre>
 </div>
 
 

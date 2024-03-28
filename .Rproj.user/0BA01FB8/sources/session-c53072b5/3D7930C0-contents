@@ -18,6 +18,7 @@ This data set reflects incidents of crime in the city of Los Angeles dating back
 
 ```{r max.print=10}
 library(dplyr)
+library(lubridate)
 
 crimes <- read.csv("https://raw.githubusercontent.com/ZaneE5/ds202finalproject/main/crimes.csv")
 
@@ -40,6 +41,28 @@ To clean the data, we will remove unecessary columns, fix/remove the data that i
 ```{r}
 #data cleaning steps here
 
+#Columns DR_NO is meaningless to us
+#Columns Part.1.2, Premis.Cd, Weapon.Used.Cd, and Mocodes could be useful but we do not know what these columns/codes mean, even with the column descriptions.
+#Crm.Cd.1 is the same as Crm.Cd, and we are not interested in Crm.Cd.2-4
+#So we remove all these columns to reduce the data to only what we care about
+
+crimes <- select(crimes, c("Date.Rptd", "DATE.OCC", "TIME.OCC", "AREA", "AREA.NAME", "Rpt.Dist.No", "Crm.Cd", "Crm.Cd.Desc", "Vict.Age", "Vict.Sex", "Vict.Descent", "Premis.Desc", "Weapon.Desc", "Status", "Status.Desc", "LOCATION", "Cross.Street", "LAT", "LON"))
+
+#We change some of the chr columns into factors for ease of grouping later
+crimes$AREA.NAME <- factor(crimes$AREA.NAME, unique(crimes[,'AREA.NAME']))
+crimes$Crm.Cd.Desc <- factor(crimes$Crm.Cd.Desc, unique(crimes[,'Crm.Cd.Desc']))
+crimes$Vict.Sex <- factor(crimes$Vict.Sex, unique(crimes[,'Vict.Sex']))
+crimes$Vict.Descent <- factor(crimes$Vict.Descent, unique(crimes[,'Vict.Descent']))
+crimes$Premis.Desc <- factor(crimes$Premis.Desc, unique(crimes[,'Premis.Desc']))
+crimes$Weapon.Desc <- factor(crimes$Weapon.Desc, unique(crimes[,'Weapon.Desc']))
+crimes$Status <- factor(crimes$Status, unique(crimes[,'Status']))
+crimes$Status.Desc <- factor(crimes$Status.Desc, unique(crimes[,'Status.Desc']))
+crimes$LOCATION <- factor(crimes$LOCATION, unique(crimes[,'LOCATION']))
+crimes$Cross.Street <- factor(crimes$Cross.Street, unique(crimes[,'Cross.Street']))
+
+#We do a little cleaning on the dates to remove the unecessary 0:00 times
+crimes$DATE.OCC <- mdy_hm(crimes$DATE.OCC, tz = "America/Los_Angeles")
+crimes$Date.Rptd <- mdy_hm(crimes$Date.Rptd, tz = "America/Los_Angeles")
 
 ```
 
@@ -49,5 +72,8 @@ After cleaning, we want to get some of the basic information about the dataset.
 ```{r}
 #marginal summaries
 dim(crimes)
+
+
+
 ```
 

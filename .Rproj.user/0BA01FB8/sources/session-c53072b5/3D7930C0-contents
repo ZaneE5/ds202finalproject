@@ -73,7 +73,9 @@ After cleaning, we want to get some of the basic information about the dataset.
 #marginal summaries
 dim(crimes)
 
+str(crimes)
 
+head(crimes)
 
 ```
 

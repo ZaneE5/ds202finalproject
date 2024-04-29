@@ -87,4 +87,8 @@ ggplot( aes(y=`Weapon.Desc`)) +
 filter(crimes, `Crm.Cd.Desc`=="VIOLATION OF RESTRAINING ORDER" &! `Weapon.Desc` == "") %>%
 ggplot( aes(y=`Weapon.Desc`)) +
   geom_bar()
+
+crimes %>% group_by(`Crm.Cd.Desc`) %>%
+  summarize(`Weapon.Desc`)
 ```
+

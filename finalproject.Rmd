@@ -29,9 +29,9 @@ crimes %>% head()
 
 A description of the dataset and each column can be found at <https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data>. The variables in the dataset are as follows:
 
--   variable 1: ...
+- **DR_NO**: Division of Records Number: Official file number made up of a 2 digit year, area ID, and 5 digits. This variable has type int. 
 
--   variable 2: ...
+- **Date.Rptd**: The date the crime was reported, of type character.
 
 -   ...
 
@@ -107,22 +107,69 @@ Next, my first idea is to make a bar chart with type of crime on the y-axis, cou
 ```{r}
 library(ggplot2)
 
-demo <- filter(demo, `Vict.Age` > 0)
-
-filter (demo, `Vict.Sex` != "") %>% ggplot(aes(x = Crm.Cd.Desc, fill = Vict.Sex)) + 
+ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Sex)) + 
   geom_bar() + 
-  coord_flip()
+  coord_flip() + 
+  labs(title = "Crimes by Victim Sex",
+         x = "Count",
+         y = "Crime")
 ```
 
 ```{r}
 ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Descent)) + 
   geom_bar() + 
-  coord_flip()
+  coord_flip() + 
+  theme(
+    legend.key.size = unit(0.2, "cm")
+  ) + 
+  labs(title = "Crimes by Victim Descent",
+         x = "Count",
+         y = "Crime")
+```
+
+```{r}
+ggplot(demo, aes(x = Vict.Age)) +
+  geom_bar() +
+  facet_wrap(~ Crm.Cd.Desc, scales = "free_y") +
+  labs(title = "Crime Type by Victim Age",
+       x = "Victim Age",
+       y = "Count of Ages") +
+  theme_minimal() +
+  theme(strip.text.x = element_text(hjust = 0, size = 5))
+```
+
+```{r}
+mage <- demo %>% group_by(`Crm.Cd.Desc`) %>% summarise(mean_age = mean(`Vict.Age`)) %>%   arrange(`mean_age`)
+
+mage
+```
+
+```{r}
+ggplot(mage, aes(x = reorder(Crm.Cd.Desc, mean_age), y = `mean_age`)) + 
+  geom_bar(stat="identity") + 
+  coord_flip() + 
+  labs(title = "Mean Age of Victims by Crime Type",
+       x = "Crime Type",
+       y = "Mean Age") +
+  theme_minimal()
 ```
 
 ## Relationship between Crime and Status of Investigation
 
-Niraj work go here
+```{r}
+library(ggplot2)
+
+ggplot(crimes, aes(x = `Crm.Cd.Desc`, fill = Status)) +
+  geom_bar() +  
+  labs(
+    x = "Crime Description",
+    y = "Count",    
+    title = "Distribution of Status for Each Crime Description"  ) +    
+  coord_flip()+  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+```
 
 ## Relationship between Demographics
 

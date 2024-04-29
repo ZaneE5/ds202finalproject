@@ -77,6 +77,10 @@ crimes$Cross.Street <- factor(crimes$Cross.Street, unique(crimes[,'Cross.Street'
 crimes$DATE.OCC <- mdy_hm(crimes$DATE.OCC, tz = "America/Los_Angeles")
 crimes$Date.Rptd <- mdy_hm(crimes$Date.Rptd, tz = "America/Los_Angeles")
 
+#We are keeping the most common crimes and deleting the less common ones, this will make the data easier to work with
+toKeep <- tail(crimes %>% group_by(`Crm.Cd.Desc`) %>% count() %>% arrange(`n`),20)
+crimes <- filter(crimes, `Crm.Cd.Desc` %in% toKeep$Crm.Cd.Desc)
+
 ```
 
 After cleaning, we want to get some of the basic information about the dataset.
@@ -105,6 +109,9 @@ Nicholas work go here
 
 ## Relationship between Weapon and Crime
 
+Trial and Error:
+Names were overlapping so I switched the graph to be sideways to make all the labels visible
+Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup and regroup by n. 
 ```{r}
 library(ggplot2)
 filter(crimes, `Crm.Cd.Desc`=="BURGLARY" &! `Weapon.Desc` == "") %>%
@@ -115,7 +122,12 @@ filter(crimes, `Crm.Cd.Desc`=="VIOLATION OF RESTRAINING ORDER" &! `Weapon.Desc` 
 ggplot( aes(y=`Weapon.Desc`)) +
   geom_bar()
 
-crimes %>% group_by(`Crm.Cd.Desc`) %>%
-  summarize()
+df <- crimes %>% group_by(`Crm.Cd.Desc`) %>%
+  count(`Weapon.Desc`) %>% arrange() %>% filter(`n` == max(`n`))
+
+df
+ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`)) +
+  geom_col()
+
 ```
 

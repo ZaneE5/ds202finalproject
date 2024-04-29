@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 96ecd7d2de9657e553ff259bb80292ecd01f3b54
 ---
 title: "Los Angeles Crime Statistics"
 output: html_document
@@ -13,12 +16,20 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Zane, Cameron, Josh, Nicholas, Niraj**
 
+<<<<<<< HEAD
 
 ## Data Information
 
 For our project, we retrieved a data set from https://catalog.data.gov/dataset/crime-data-from-2020-to-present.
 
 This data set reflects incidents of crime in the city of Los Angeles dating back to 2020. There were originally over 918,000 rows, which we have brought down to 200,000 to make it easier to work with. This is still a very large data set. 
+=======
+## Data Information
+
+For our project, we retrieved a data set from <https://catalog.data.gov/dataset/crime-data-from-2020-to-present>.
+
+This data set reflects incidents of crime in the city of Los Angeles dating back to 2020. There were originally over 918,000 rows, which we have brought down to 200,000 to make it easier to work with. This is still a very large data set.
+>>>>>>> 96ecd7d2de9657e553ff259bb80292ecd01f3b54
 
 ```{r max.print=10}
 library(dplyr)
@@ -29,6 +40,7 @@ crimes <- read.csv("https://raw.githubusercontent.com/ZaneE5/ds202finalproject/m
 crimes %>% head()
 ```
 
+<<<<<<< HEAD
 A description of the dataset and each column can be found at https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data. The variables in the dataset are as follows:
 
 - variable 1: ...
@@ -47,6 +59,25 @@ A description of the dataset and each column can be found at https://data.lacity
 
 - What is the relationship between the demographic columns in the dataset? - Nicholas
 
+=======
+A description of the dataset and each column can be found at <https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data>. The variables in the dataset are as follows:
+
+-   variable 1: ...
+
+-   variable 2: ...
+
+-   ...
+
+## Our questions:
+
+-   What is the most likely victim demographic based on crime committed? - Zane
+
+-   What kinds of weapons are used the most and in what crimes? - Joshua
+
+-   What is the relationship between type of crime and status of crime (closed or open)? - Niraj
+
+-   What is the relationship between the demographic columns in the dataset? - Nicholas
+>>>>>>> 96ecd7d2de9657e553ff259bb80292ecd01f3b54
 
 ## Data Cleaning
 
@@ -97,8 +128,13 @@ head(crimes)
 
 ## Relationship between Demographic and Crime
 
+<<<<<<< HEAD
   We want to find out what the most likely victim demographic is based on crime committed. To do this, I plan to first make a new dataset of only the relevant columns.
   
+=======
+We want to find out what the most likely victim demographic is based on crime committed. To do this, I plan to first make a new dataset of only the relevant columns.
+
+>>>>>>> 96ecd7d2de9657e553ff259bb80292ecd01f3b54
 ```{r}
 demo <- select(crimes, c("Crm.Cd.Desc", "Vict.Age", "Vict.Sex", "Vict.Descent"))
 
@@ -130,9 +166,12 @@ Niraj work go here
 ## Relationship between Demographics
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Nicholas work go here
 =======
 >>>>>>> 453e3906cfa7674f5a974e4baedc19c88b2d17f9
+=======
+>>>>>>> 96ecd7d2de9657e553ff259bb80292ecd01f3b54
 ```{r}
 library(ggplot2)
 ggplot(crimes, aes(x = `Vict.Age`, fill = `Vict.Sex`)) +
@@ -198,6 +237,7 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
   )
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 453e3906cfa7674f5a974e4baedc19c88b2d17f9
@@ -207,6 +247,13 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
 Trial and Error:
 Names were overlapping so I switched the graph to be sideways to make all the labels visible
 Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup and regroup by n. 
+=======
+
+## Relationship between Weapon and Crime
+
+Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup and regroup by n.
+
+>>>>>>> 96ecd7d2de9657e553ff259bb80292ecd01f3b54
 ```{r}
 library(ggplot2)
 filter(crimes, `Crm.Cd.Desc`=="BURGLARY" &! `Weapon.Desc` == "") %>%
@@ -224,6 +271,7 @@ df
 ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`)) +
   geom_col()
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 ```
 =======
@@ -451,3 +499,6 @@ ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`)) +
 
 ```
 >>>>>>> 6db017bac68be77cc95aa104030ab82db4cdae09
+=======
+```
+>>>>>>> 96ecd7d2de9657e553ff259bb80292ecd01f3b54

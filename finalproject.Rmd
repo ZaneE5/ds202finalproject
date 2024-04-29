@@ -89,6 +89,6 @@ ggplot( aes(y=`Weapon.Desc`)) +
   geom_bar()
 
 crimes %>% group_by(`Crm.Cd.Desc`) %>%
-  summarize(`Weapon.Desc`)
+  summarize()
 ```
 

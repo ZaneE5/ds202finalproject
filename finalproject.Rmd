@@ -80,7 +80,6 @@ crimes$Date.Rptd <- mdy_hm(crimes$Date.Rptd, tz = "America/Los_Angeles")
 #We are keeping the most common crimes and deleting the less common ones, this will make the data easier to work with
 toKeep <- tail(crimes %>% group_by(`Crm.Cd.Desc`) %>% count() %>% arrange(`n`),20)
 crimes <- filter(crimes, `Crm.Cd.Desc` %in% toKeep$Crm.Cd.Desc)
-
 ```
 
 After cleaning, we want to get some of the basic information about the dataset.
@@ -110,9 +109,9 @@ Next, my first idea is to make a bar chart with type of crime on the y-axis, cou
 ```{r}
 library(ggplot2)
 
-demo <- filter(demo, `Vict.Age` != 0)
+demo <- filter(demo, `Vict.Age` > 0)
 
-ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Sex)) + 
+filter (demo, `Vict.Sex` != "") %>% ggplot(aes(x = Crm.Cd.Desc, fill = Vict.Sex)) + 
   geom_bar() + 
   coord_flip()
 ```

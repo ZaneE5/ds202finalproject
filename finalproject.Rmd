@@ -200,7 +200,19 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
     legend.margin = margin(t = 2, r = 2, b = 2, l = 2, unit = "pt")  
   )
 ```
-
+```{r}
+ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
+  geom_histogram(stat = "count") +
+  scale_fill_manual(values = colors[1:length(unique_descents)]) +
+  labs(x = "Victim Age", y = "Count", fill = "Victim Descent") +
+  theme(
+    legend.key.size = unit(0.2, "cm"),
+    legend.text = element_text(size = 8),  
+    legend.title = element_text(size = 10),  
+    legend.spacing = unit(0.1, "cm"), 
+    legend.margin = margin(t = 2, r = 2, b = 2, l = 2, unit = "pt")  
+  )+ facet_wrap(~ `Vict.Sex`)
+```
 ## Relationship between Weapon and Crime
 
 Trial and Error:

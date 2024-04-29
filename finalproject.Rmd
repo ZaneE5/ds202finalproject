@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "Los Angeles Crime Statistics"
 output: html_document
@@ -225,3 +226,228 @@ ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`)) +
 
 <<<<<<< HEAD
 ```
+=======
+---
+title: "Los Angeles Crime Statistics"
+output: html_document
+date: "2024-03-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+**Zane, Cameron, Josh, Nicholas, Niraj**
+
+## Data Information
+
+For our project, we retrieved a data set from <https://catalog.data.gov/dataset/crime-data-from-2020-to-present>.
+
+This data set reflects incidents of crime in the city of Los Angeles dating back to 2020. There were originally over 918,000 rows, which we have brought down to 200,000 to make it easier to work with. This is still a very large data set.
+
+```{r max.print=10}
+library(dplyr)
+library(lubridate)
+
+crimes <- read.csv("https://raw.githubusercontent.com/ZaneE5/ds202finalproject/main/crimes.csv")
+
+crimes %>% head()
+```
+
+A description of the dataset and each column can be found at <https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data>. The variables in the dataset are as follows:
+
+-   variable 1: ...
+
+-   variable 2: ...
+
+-   ...
+
+## Our questions:
+
+-   What is the most likely victim demographic based on crime committed? - Zane
+
+-   What kinds of weapons are used the most and in what crimes? - Joshua
+
+-   What is the relationship between type of crime and status of crime (closed or open)? - Niraj
+
+-   What is the relationship between the demographic columns in the dataset? - Nicholas
+
+## Data Cleaning
+
+To clean the data, we will remove unecessary columns, fix/remove the data that is incomplete/missing, and format the columns to make them easier to work with.
+
+```{r}
+#data cleaning steps here
+
+#Columns DR_NO is meaningless to us
+#Columns Part.1.2, Premis.Cd, Weapon.Used.Cd, and Mocodes could be useful but we do not know what these columns/codes mean, even with the column descriptions.
+#Crm.Cd.1 is the same as Crm.Cd, and we are not interested in Crm.Cd.2-4
+#So we remove all these columns to reduce the data to only what we care about
+
+crimes <- select(crimes, c("Date.Rptd", "DATE.OCC", "TIME.OCC", "AREA", "AREA.NAME", "Rpt.Dist.No", "Crm.Cd", "Crm.Cd.Desc", "Vict.Age", "Vict.Sex", "Vict.Descent", "Premis.Desc", "Weapon.Desc", "Status", "Status.Desc", "LOCATION", "Cross.Street", "LAT", "LON"))
+
+#We change some of the chr columns into factors for ease of grouping later
+crimes$AREA.NAME <- factor(crimes$AREA.NAME, unique(crimes[,'AREA.NAME']))
+crimes$Crm.Cd.Desc <- factor(crimes$Crm.Cd.Desc, unique(crimes[,'Crm.Cd.Desc']))
+crimes$Vict.Sex <- factor(crimes$Vict.Sex, unique(crimes[,'Vict.Sex']))
+crimes$Vict.Descent <- factor(crimes$Vict.Descent, unique(crimes[,'Vict.Descent']))
+crimes$Premis.Desc <- factor(crimes$Premis.Desc, unique(crimes[,'Premis.Desc']))
+crimes$Weapon.Desc <- factor(crimes$Weapon.Desc, unique(crimes[,'Weapon.Desc']))
+crimes$Status <- factor(crimes$Status, unique(crimes[,'Status']))
+crimes$Status.Desc <- factor(crimes$Status.Desc, unique(crimes[,'Status.Desc']))
+crimes$LOCATION <- factor(crimes$LOCATION, unique(crimes[,'LOCATION']))
+crimes$Cross.Street <- factor(crimes$Cross.Street, unique(crimes[,'Cross.Street']))
+
+#We do a little cleaning on the dates to remove the unecessary 0:00 times
+crimes$DATE.OCC <- mdy_hm(crimes$DATE.OCC, tz = "America/Los_Angeles")
+crimes$Date.Rptd <- mdy_hm(crimes$Date.Rptd, tz = "America/Los_Angeles")
+
+#We are keeping the most common crimes and deleting the less common ones, this will make the data easier to work with
+toKeep <- tail(crimes %>% group_by(`Crm.Cd.Desc`) %>% count() %>% arrange(`n`),20)
+crimes <- filter(crimes, `Crm.Cd.Desc` %in% toKeep$Crm.Cd.Desc)
+```
+
+After cleaning, we want to get some of the basic information about the dataset.
+
+```{r}
+#marginal summaries
+dim(crimes)
+
+str(crimes)
+
+head(crimes)
+
+```
+
+## Relationship between Demographic and Crime
+
+We want to find out what the most likely victim demographic is based on crime committed. To do this, I plan to first make a new dataset of only the relevant columns.
+
+```{r}
+demo <- select(crimes, c("Crm.Cd.Desc", "Vict.Age", "Vict.Sex", "Vict.Descent"))
+
+head(demo)
+```
+
+Next, my first idea is to make a bar chart with type of crime on the y-axis, count on the x-axis, and fill by demographic.
+
+```{r}
+library(ggplot2)
+
+demo <- filter(demo, `Vict.Age` > 0)
+
+filter (demo, `Vict.Sex` != "") %>% ggplot(aes(x = Crm.Cd.Desc, fill = Vict.Sex)) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+```{r}
+ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Descent)) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+## Relationship between Crime and Status of Investigation
+
+Niraj work go here
+
+## Relationship between Demographics
+
+```{r}
+library(ggplot2)
+ggplot(crimes, aes(x = `Vict.Age`, fill = `Vict.Sex`)) +
+  geom_histogram(binwidth = 5, position = "dodge") +
+  labs(x = "Victim Age", y = "Count", fill = "Victim Sex")
+```
+
+```{r}
+crimesWOempty <- crimes[!is.na(crimes$`Vict.Sex`) & crimes$`Vict.Sex` != "" , ]
+crimesWOempty <- crimesWOempty[crimesWOempty$`Vict.Age` > 0, ]
+
+ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Sex`)) +
+  geom_histogram(binwidth = 5, position = "dodge") +
+  labs(x = "Victim Age", y = "Count", fill = "Victim Sex")
+
+```
+
+```{r}
+ggplot(crimesWOempty, aes(x = `Vict.Descent`, fill = `Vict.Sex`)) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~ cut_width(`Vict.Age`, 10)) +
+  labs(x = "Victim Descent", y = "Count", fill = "Victim Sex")
+```
+
+```{r}
+age_freq <- table(crimesWOempty$`Vict.Age`)
+max_age <- names(which.max(age_freq))
+
+cat("The age with the most crime victim is:", max_age, "\n")
+```
+
+```{r}
+median_crimes <- median(age_freq)
+
+median_crimes
+
+
+```
+
+```{r}
+high_crime_ages <- names(age_freq[age_freq > median_crimes])
+high_crime_ages
+```
+
+```{r}
+crimesWOempty <- crimesWOempty[crimesWOempty$`Vict.Age` >= 18 & crimesWOempty$`Vict.Age` <= 66 & crimesWOempty$`Vict.Descent` != "", ]
+ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
+  geom_histogram(stat = "count") +
+  labs(x = "Victim.Age", y = "Count", fill = "Victim.Descent")
+
+```
+
+```{r}
+unique(crimesWOempty$Vict.Descent)
+```
+
+```{r}
+unique_descents <- unique(crimes$`Vict.Descent`)
+colors <- c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999", "#e7298a", "#66c2a5", "#8da0cb", "#e78ac3", "#fc8d62", "#b3b3b3", "#fdb462", "#bebada", "#fb8072", "#8dd3c7")
+
+ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
+  geom_histogram(stat = "count") +
+  scale_fill_manual(values = colors[1:length(unique_descents)]) +
+  labs(x = "Victim Age", y = "Count", fill = "Victim Descent") +
+  theme(
+    legend.key.size = unit(0.2, "cm"),
+    legend.text = element_text(size = 8),  
+    legend.title = element_text(size = 10),  
+    legend.spacing = unit(0.1, "cm"), 
+    legend.margin = margin(t = 2, r = 2, b = 2, l = 2, unit = "pt")  
+  )
+```
+
+## Relationship between Weapon and Crime
+
+Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup and regroup by n.
+
+```{r}
+library(ggplot2)
+filter(crimes, `Crm.Cd.Desc`=="BURGLARY" &! `Weapon.Desc` == "") %>%
+ggplot( aes(y=`Weapon.Desc`)) +
+  geom_bar()
+
+filter(crimes, `Crm.Cd.Desc`=="VIOLATION OF RESTRAINING ORDER" &! `Weapon.Desc` == "") %>%
+ggplot( aes(y=`Weapon.Desc`)) +
+  geom_bar()
+
+df <- crimes %>% group_by(`Crm.Cd.Desc`) %>%
+  count(`Weapon.Desc`) %>% arrange() %>% filter(`n` == max(`n`))
+
+df
+ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`)) +
+  geom_col()
+
+```
+>>>>>>> 6db017bac68be77cc95aa104030ab82db4cdae09

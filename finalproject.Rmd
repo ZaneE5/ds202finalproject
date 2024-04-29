@@ -80,7 +80,11 @@ head(crimes)
 ```
 ```{r}
 library(ggplot2)
-filter(crimes, `Crm.Cd.Desc`=="VEHICLE - STOLEN") %>%
-ggplot( aes(x=`Weapon.Desc`)) +
+filter(crimes, `Crm.Cd.Desc`=="BURGLARY" &! `Weapon.Desc` == "") %>%
+ggplot( aes(y=`Weapon.Desc`)) +
+  geom_bar()
+
+filter(crimes, `Crm.Cd.Desc`=="VIOLATION OF RESTRAINING ORDER" &! `Weapon.Desc` == "") %>%
+ggplot( aes(y=`Weapon.Desc`)) +
   geom_bar()
 ```

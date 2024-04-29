@@ -29,9 +29,9 @@ crimes %>% head()
 
 A description of the dataset and each column can be found at <https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data>. The variables in the dataset are as follows:
 
-- **DR_NO**: Division of Records Number: Official file number made up of a 2 digit year, area ID, and 5 digits. This variable has type int. 
+-   **DR_NO**: Division of Records Number: Official file number made up of a 2 digit year, area ID, and 5 digits. This variable has type int.
 
-- **Date.Rptd**: The date the crime was reported, of type character.
+-   **Date.Rptd**: The date the crime was reported, of type character.
 
 -   ...
 
@@ -179,6 +179,7 @@ ggplot(crimes, aes(x = `Vict.Age`, fill = `Vict.Sex`)) +
   geom_histogram(binwidth = 5, position = "dodge") +
   labs(x = "Victim Age", y = "Count", fill = "Victim Sex")
 ```
+
 ```{r}
 crimesWOempty <- crimes[!is.na(crimes$`Vict.Sex`) & crimes$`Vict.Sex` != "" , ]
 crimesWOempty <- crimesWOempty[crimesWOempty$`Vict.Age` > 0, ]
@@ -188,18 +189,21 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Sex`)) +
   labs(x = "Victim Age", y = "Count", fill = "Victim Sex")
 
 ```
+
 ```{r}
 ggplot(crimesWOempty, aes(x = `Vict.Descent`, fill = `Vict.Sex`)) +
   geom_bar(position = "dodge") +
   facet_wrap(~ cut_width(`Vict.Age`, 10)) +
   labs(x = "Victim Descent", y = "Count", fill = "Victim Sex")
 ```
+
 ```{r}
 age_freq <- table(crimesWOempty$`Vict.Age`)
 max_age <- names(which.max(age_freq))
 
 cat("The age with the most crime victim is:", max_age, "\n")
 ```
+
 ```{r}
 median_crimes <- median(age_freq)
 
@@ -207,10 +211,12 @@ median_crimes
 
 
 ```
+
 ```{r}
 high_crime_ages <- names(age_freq[age_freq > median_crimes])
 high_crime_ages
 ```
+
 ```{r}
 crimesWOempty <- crimesWOempty[crimesWOempty$`Vict.Age` >= 18 & crimesWOempty$`Vict.Age` <= 66 & crimesWOempty$`Vict.Descent` != "", ]
 ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
@@ -218,13 +224,18 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
   labs(x = "Victim.Age", y = "Count", fill = "Victim.Descent")
 
 ```
+
 ```{r}
 unique(crimesWOempty$Vict.Descent)
 ```
+
 ```{r}
 unique_descents <- unique(crimes$`Vict.Descent`)
 colors <- c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999", "#e7298a", "#66c2a5", "#8da0cb", "#e78ac3", "#fc8d62", "#b3b3b3", "#fdb462", "#bebada", "#fb8072", "#8dd3c7")
+```
 
+
+```{r}
 ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
   geom_histogram(stat = "count") +
   scale_fill_manual(values = colors[1:length(unique_descents)]) +
@@ -235,7 +246,7 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
     legend.title = element_text(size = 10),  
     legend.spacing = unit(0.1, "cm"), 
     legend.margin = margin(t = 2, r = 2, b = 2, l = 2, unit = "pt")  
-  )
+  )+ facet_wrap(~ `Vict.Sex`)
 ```
 
 ## Relationship between Weapon and Crime

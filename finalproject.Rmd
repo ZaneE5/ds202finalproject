@@ -93,7 +93,32 @@ head(crimes)
 
 ## Relationship between Demographic and Crime
 
-Zane work go here
+  We want to find out what the most likely victim demographic is based on crime committed. To do this, I plan to first make a new dataset of only the relevant columns.
+  
+```{r}
+demo <- select(crimes, c("Crm.Cd.Desc", "Vict.Age", "Vict.Sex", "Vict.Descent"))
+
+head(demo)
+```
+
+Next, my first idea is to make a bar chart with type of crime on the y-axis, count on the x-axis, and fill by demographic.
+
+```{r}
+library(ggplot2)
+
+demo <- filter(demo, `Vict.Age` != 0)
+
+ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Sex)) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+```{r}
+ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Descent)) + 
+  geom_bar() + 
+  coord_flip()
+```
+
 
 ## Relationship between Crime and Status of Investigation
 

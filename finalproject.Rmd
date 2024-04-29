@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "Los Angeles Crime Statistics"
 output: html_document
@@ -179,3 +180,138 @@ filter(crimes, `Crm.Cd.Desc`=="VIOLATION OF RESTRAINING ORDER" &! `Weapon.Desc` 
 ggplot( aes(y=`Weapon.Desc`)) +
   geom_bar()
 ```
+=======
+---
+title: "Los Angeles Crime Statistics"
+output: html_document
+date: "2024-03-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+**Zane, Cameron, Josh, Nicholas, Niraj**
+
+
+## Data Information
+
+For our project, we retrieved a data set from https://catalog.data.gov/dataset/crime-data-from-2020-to-present.
+
+This data set reflects incidents of crime in the city of Los Angeles dating back to 2020. There were originally over 918,000 rows, which we have brought down to 200,000 to make it easier to work with. This is still a very large data set. 
+
+```{r max.print=10}
+library(dplyr)
+library(lubridate)
+
+crimes <- read.csv("https://raw.githubusercontent.com/ZaneE5/ds202finalproject/main/crimes.csv")
+
+crimes %>% head()
+```
+
+A description of the dataset and each column can be found at https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data. The variables in the dataset are as follows:
+
+- variable 1: ...
+
+- variable 2: ...
+
+- ...
+
+## Our questions:
+
+- What is the most likely victim demographic based on crime committed? - Zane
+
+- What kinds of weapons are used the most and in what crimes? - Joshua
+
+- What is the relationship between type of crime and status of crime (closed or open)? - Niraj
+
+- What is the relationship between the demographic columns in the dataset? - Nicholas
+
+
+## Data Cleaning
+
+To clean the data, we will remove unecessary columns, fix/remove the data that is incomplete/missing, and format the columns to make them easier to work with.
+
+```{r}
+#data cleaning steps here
+
+#Columns DR_NO is meaningless to us
+#Columns Part.1.2, Premis.Cd, Weapon.Used.Cd, and Mocodes could be useful but we do not know what these columns/codes mean, even with the column descriptions.
+#Crm.Cd.1 is the same as Crm.Cd, and we are not interested in Crm.Cd.2-4
+#So we remove all these columns to reduce the data to only what we care about
+
+crimes <- select(crimes, c("Date.Rptd", "DATE.OCC", "TIME.OCC", "AREA", "AREA.NAME", "Rpt.Dist.No", "Crm.Cd", "Crm.Cd.Desc", "Vict.Age", "Vict.Sex", "Vict.Descent", "Premis.Desc", "Weapon.Desc", "Status", "Status.Desc", "LOCATION", "Cross.Street", "LAT", "LON"))
+
+#We change some of the chr columns into factors for ease of grouping later
+crimes$AREA.NAME <- factor(crimes$AREA.NAME, unique(crimes[,'AREA.NAME']))
+crimes$Crm.Cd.Desc <- factor(crimes$Crm.Cd.Desc, unique(crimes[,'Crm.Cd.Desc']))
+crimes$Vict.Sex <- factor(crimes$Vict.Sex, unique(crimes[,'Vict.Sex']))
+crimes$Vict.Descent <- factor(crimes$Vict.Descent, unique(crimes[,'Vict.Descent']))
+crimes$Premis.Desc <- factor(crimes$Premis.Desc, unique(crimes[,'Premis.Desc']))
+crimes$Weapon.Desc <- factor(crimes$Weapon.Desc, unique(crimes[,'Weapon.Desc']))
+crimes$Status <- factor(crimes$Status, unique(crimes[,'Status']))
+crimes$Status.Desc <- factor(crimes$Status.Desc, unique(crimes[,'Status.Desc']))
+crimes$LOCATION <- factor(crimes$LOCATION, unique(crimes[,'LOCATION']))
+crimes$Cross.Street <- factor(crimes$Cross.Street, unique(crimes[,'Cross.Street']))
+
+#We do a little cleaning on the dates to remove the unecessary 0:00 times
+crimes$DATE.OCC <- mdy_hm(crimes$DATE.OCC, tz = "America/Los_Angeles")
+crimes$Date.Rptd <- mdy_hm(crimes$Date.Rptd, tz = "America/Los_Angeles")
+
+#We are keeping the most common crimes and deleting the less common ones, this will make the data easier to work with
+toKeep <- tail(crimes %>% group_by(`Crm.Cd.Desc`) %>% count() %>% arrange(`n`),20)
+crimes <- filter(crimes, `Crm.Cd.Desc` %in% toKeep$Crm.Cd.Desc)
+
+```
+
+After cleaning, we want to get some of the basic information about the dataset.
+
+```{r}
+#marginal summaries
+dim(crimes)
+
+str(crimes)
+
+head(crimes)
+
+```
+
+## Relationship between Demographic and Crime
+
+Zane work go here
+
+## Relationship between Crime and Status of Investigation
+
+Niraj work go here
+
+## Relationship between Demographics
+
+Nicholas work go here
+
+## Relationship between Weapon and Crime
+
+Trial and Error:
+Names were overlapping so I switched the graph to be sideways to make all the labels visible
+Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup and regroup by n. 
+```{r}
+library(ggplot2)
+filter(crimes, `Crm.Cd.Desc`=="BURGLARY" &! `Weapon.Desc` == "") %>%
+ggplot( aes(y=`Weapon.Desc`)) +
+  geom_bar()
+
+filter(crimes, `Crm.Cd.Desc`=="VIOLATION OF RESTRAINING ORDER" &! `Weapon.Desc` == "") %>%
+ggplot( aes(y=`Weapon.Desc`)) +
+  geom_bar()
+
+df <- crimes %>% group_by(`Crm.Cd.Desc`) %>%
+  count(`Weapon.Desc`) %>% arrange() %>% filter(`n` == max(`n`))
+
+df
+ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`)) +
+  geom_col()
+
+```
+
+>>>>>>> fcc46b52062becce26ac20ddae7e9ca8def5218e

@@ -80,7 +80,6 @@ crimes$Date.Rptd <- mdy_hm(crimes$Date.Rptd, tz = "America/Los_Angeles")
 #We are keeping the most common crimes and deleting the less common ones, this will make the data easier to work with
 toKeep <- tail(crimes %>% group_by(`Crm.Cd.Desc`) %>% count() %>% arrange(`n`),20)
 crimes <- filter(crimes, `Crm.Cd.Desc` %in% toKeep$Crm.Cd.Desc)
-
 ```
 
 After cleaning, we want to get some of the basic information about the dataset.
@@ -97,7 +96,31 @@ head(crimes)
 
 ## Relationship between Demographic and Crime
 
-Zane work go here
+  We want to find out what the most likely victim demographic is based on crime committed. To do this, I plan to first make a new dataset of only the relevant columns.
+  
+```{r}
+demo <- select(crimes, c("Crm.Cd.Desc", "Vict.Age", "Vict.Sex", "Vict.Descent"))
+
+head(demo)
+```
+
+Next, my first idea is to make a bar chart with type of crime on the y-axis, count on the x-axis, and fill by demographic.
+
+```{r}
+library(ggplot2)
+
+demo <- filter(demo, `Vict.Age` > 0)
+
+filter (demo, `Vict.Sex` != "") %>% ggplot(aes(x = Crm.Cd.Desc, fill = Vict.Sex)) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+```{r}
+ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Descent)) + 
+  geom_bar() + 
+  coord_flip()
+```
 
 ## Relationship between Crime and Status of Investigation
 
@@ -105,7 +128,10 @@ Niraj work go here
 
 ## Relationship between Demographics
 
+<<<<<<< HEAD
 Nicholas work go here
+=======
+>>>>>>> 453e3906cfa7674f5a974e4baedc19c88b2d17f9
 ```{r}
 library(ggplot2)
 ggplot(crimes, aes(x = `Vict.Age`, fill = `Vict.Sex`)) +
@@ -170,7 +196,10 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
     legend.margin = margin(t = 2, r = 2, b = 2, l = 2, unit = "pt")  
   )
 ```
+<<<<<<< HEAD
 
+=======
+>>>>>>> 453e3906cfa7674f5a974e4baedc19c88b2d17f9
 
 ## Relationship between Weapon and Crime
 
@@ -194,4 +223,8 @@ df
 ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`)) +
   geom_col()
 
+<<<<<<< HEAD
 ```
+=======
+```
+>>>>>>> 453e3906cfa7674f5a974e4baedc19c88b2d17f9

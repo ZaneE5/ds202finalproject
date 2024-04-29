@@ -12,9 +12,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Zane, Cameron, Josh, Nicholas, Niraj**
 
+
+## Data Information
+
 For our project, we retrieved a data set from https://catalog.data.gov/dataset/crime-data-from-2020-to-present.
 
-This data set reflects incidents of crime in the city of Los Angeles dating back to 2020. There were originally over 918,000 rows, which we have brought down to 200,000 to make it easier to work with. This is still a very large data set. A description of the dataset and each column can be found at https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data.
+This data set reflects incidents of crime in the city of Los Angeles dating back to 2020. There were originally over 918,000 rows, which we have brought down to 200,000 to make it easier to work with. This is still a very large data set. 
 
 ```{r max.print=10}
 library(dplyr)
@@ -25,16 +28,26 @@ crimes <- read.csv("https://raw.githubusercontent.com/ZaneE5/ds202finalproject/m
 crimes %>% head()
 ```
 
-**Our questions:**
+A description of the dataset and each column can be found at https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data. The variables in the dataset are as follows:
 
-- What is the most likely victim demographic based on crime committed? 
+- variable 1: ...
 
-- Is there a significant change in type of crime committed based on time or location?
+- variable 2: ...
 
-- What is the relationship between the date the crime occurred the date it was reported?
+- ...
 
-- What kinds of weapons are used the most and in what crimes?
+## Our questions:
 
+- What is the most likely victim demographic based on crime committed? - Zane
+
+- What kinds of weapons are used the most and in what crimes? - Joshua
+
+- What is the relationship between type of crime and status of crime (closed or open)? - Niraj
+
+- What is the relationship between the demographic columns in the dataset? - Nicholas
+
+
+## Data Cleaning
 
 To clean the data, we will remove unecessary columns, fix/remove the data that is incomplete/missing, and format the columns to make them easier to work with.
 
@@ -66,7 +79,6 @@ crimes$Date.Rptd <- mdy_hm(crimes$Date.Rptd, tz = "America/Los_Angeles")
 
 ```
 
-
 After cleaning, we want to get some of the basic information about the dataset.
 
 ```{r}
@@ -78,6 +90,21 @@ str(crimes)
 head(crimes)
 
 ```
+
+## Relationship between Demographic and Crime
+
+Zane work go here
+
+## Relationship between Crime and Status of Investigation
+
+Niraj work go here
+
+## Relationship between Demographics
+
+Nicholas work go here
+
+## Relationship between Weapon and Crime
+
 ```{r}
 library(ggplot2)
 filter(crimes, `Crm.Cd.Desc`=="BURGLARY" &! `Weapon.Desc` == "") %>%

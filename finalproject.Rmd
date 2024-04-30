@@ -347,24 +347,37 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
 
 ## Relationship between Weapon and Crime
 
-Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup and regroup by n.
+Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup. Attempted to do a facet wrap but there were too many variables, even after reducing variables it was difficult to make the graph readable. 
 
 ```{r}
 library(ggplot2)
-filter(crimes, `Crm.Cd.Desc`=="BURGLARY" &! `Weapon.Desc` == "") %>%
+filter(crimes, `Crm.Cd.Desc`=="BURGLARY") %>%
 ggplot( aes(y=`Weapon.Desc`)) +
   geom_bar()
 
-filter(crimes, `Crm.Cd.Desc`=="VIOLATION OF RESTRAINING ORDER" &! `Weapon.Desc` == "") %>%
+filter(crimes, `Crm.Cd.Desc`=="BATTERY - SIMPLE ASSAULT") %>%
 ggplot( aes(y=`Weapon.Desc`)) +
+  geom_bar()
+
+filter(crimes, `Weapon.Desc`=="STRONG-ARM (HANDS, FIST, FEET OR BODILY FORCE)") %>%
+ggplot( aes(y=`Crm.Cd.Desc`)) +
+  geom_bar()
+
+filter(crimes, `Weapon.Desc`=="") %>%
+ggplot( aes(y=`Crm.Cd.Desc`)) +
   geom_bar()
 
 df <- crimes %>% group_by(`Crm.Cd.Desc`) %>%
   count(`Weapon.Desc`) %>% arrange() %>% filter(`n` == max(`n`))
 
 df
-ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`)) +
-  geom_col()
+ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`), text = `Weapon.Desc`) +
+  geom_col(fill="Red") +
+  geom_text(aes(label = `Weapon.Desc`), hjust=0, size=2)
+toKeep <- tail(crimes %>% group_by(`Weapon.Desc`) %>% count() %>% arrange(`n`),20)
+crimes <- filter(crimes, `Weapon.Desc` %in% toKeep$Weapon.Desc)
+ggplot(crimes, aes(y=`Weapon.Desc`)) +
+  geom_bar()
 
 ```
 >>>>>>> 7507178d4c112f4735c0b918f9f2652a58d8c0eb

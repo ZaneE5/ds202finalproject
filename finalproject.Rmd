@@ -1,7 +1,7 @@
 ---
 title: "Los Angeles Crime Statistics"
 output: html_document
-date: "2024-03-27"
+date: "2024-04-30"
 ---
 
 ```{r setup, include=FALSE}
@@ -109,6 +109,7 @@ crimes$Status <- factor(crimes$Status, unique(crimes[,'Status']))
 #We are keeping the most common crimes and deleting the less common ones, this will make the data easier to work with
 toKeep <- tail(crimes %>% group_by(`Crm.Cd.Desc`) %>% count() %>% arrange(`n`),20)
 crimes <- filter(crimes, `Crm.Cd.Desc` %in% toKeep$Crm.Cd.Desc)
+toKeep
 ```
 
 After cleaning, we want to get some of the basic information about the dataset.
@@ -162,6 +163,7 @@ ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Sex)) +
 That looks better. Men are more likely to be victims of weapon brandishing, robbery, grand theft from auto, and assault with deadly weapons/aggravated assault. Women are more likely to be victims of restraining order violations, and intimate partner aggravated and simple assault. The rest of the crimes are fairly even. Many of the robbery-esque crimes have a significant portion of unknown victims, which I could only assume would result from discovery of stolen goods upon an unrelated arrest. In only 14 cases, the victims sex is listed as "H", which I infer means intersex.
 
 Next, lets compare the relationship between victim descent and type of crime committed.
+
 ```{r}
 demo <- demo %>% filter(Vict.Descent != "")
 
@@ -220,6 +222,7 @@ ggplot(mage, aes(x = reorder(Crm.Cd.Desc, mean_age), y = `mean_age`)) +
        y = "Mean Age") +
   theme_minimal()
 ```
+
 ```{r}
 ggplot(mage, aes(x = reorder(Crm.Cd.Desc, min_age), y = `min_age`)) + 
   geom_bar(stat="identity") + 
@@ -322,6 +325,7 @@ unique_descents <- unique(crimes$`Vict.Descent`)
 colors <- c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999", "#e7298a", "#66c2a5", "#8da0cb", "#e78ac3", "#fc8d62", "#b3b3b3", "#fdb462", "#bebada", "#fb8072", "#8dd3c7")
 ```
 
+
 ```{r}
 ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
   geom_histogram(stat = "count") +
@@ -335,6 +339,7 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
     legend.margin = margin(t = 2, r = 2, b = 2, l = 2, unit = "pt")  
   )
 ```
+
 
 ```{r}
 ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
@@ -350,26 +355,43 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
   )+ facet_wrap(~ `Vict.Sex`)
 ```
 
-
 ## Relationship between Weapon and Crime
 
-Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup and regroup by n.
+Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup. Attempted to do a facet wrap but there were too many variables, even after reducing variables it was difficult to make the graph readable. 
+
 
 ```{r}
 library(ggplot2)
-filter(crimes, `Crm.Cd.Desc`=="BURGLARY" &! `Weapon.Desc` == "") %>%
+toKeep <- tail(crimes %>% group_by(`Crm.Cd.Desc`) %>% count() %>% arrange(`n`),10)
+crimes2 <- filter(crimes, `Crm.Cd.Desc` %in% toKeep$Crm.Cd.Desc)
+toKeep <- tail(crimes %>% group_by(`Weapon.Desc`) %>% count() %>% arrange(`n`),10)
+crimes3 <- filter(crimes, `Weapon.Desc` %in% toKeep$Weapon.Desc)
+
+filter(crimes3, `Crm.Cd.Desc`=="BURGLARY") %>% 
 ggplot( aes(y=`Weapon.Desc`)) +
   geom_bar()
 
-filter(crimes, `Crm.Cd.Desc`=="VIOLATION OF RESTRAINING ORDER" &! `Weapon.Desc` == "") %>%
+filter(crimes3, `Crm.Cd.Desc`=="BATTERY - SIMPLE ASSAULT") %>%
 ggplot( aes(y=`Weapon.Desc`)) +
+  geom_bar()
+
+filter(crimes2, `Weapon.Desc`=="STRONG-ARM (HANDS, FIST, FEET OR BODILY FORCE)") %>%
+ggplot( aes(y=`Crm.Cd.Desc`)) +
+  geom_bar()
+
+filter(crimes2, `Weapon.Desc`=="") %>%
+ggplot( aes(y=`Crm.Cd.Desc`)) +
   geom_bar()
 
 df <- crimes %>% group_by(`Crm.Cd.Desc`) %>%
   count(`Weapon.Desc`) %>% arrange() %>% filter(`n` == max(`n`))
 
 df
-ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`)) +
-  geom_col()
-
+ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`), text = `Weapon.Desc`) +
+  geom_col(fill="Red") +
+  geom_text(aes(label = `Weapon.Desc`), hjust=0, size=2)
+toKeep <- tail(crimes %>% group_by(`Weapon.Desc`) %>% count() %>% arrange(`n`),20)
+crimes <- filter(crimes, `Weapon.Desc` %in% toKeep$Weapon.Desc)
+ggplot(crimes, aes(y=`Weapon.Desc`)) +
+  geom_bar()
 ```

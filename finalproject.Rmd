@@ -361,19 +361,19 @@ crimes3 <- filter(crimes, `Weapon.Desc` %in% toKeep$Weapon.Desc)
 
 filter(crimes3, `Crm.Cd.Desc`=="BURGLARY") %>% 
 ggplot( aes(y=`Weapon.Desc`)) +
-  geom_bar()
+  geom_bar(fill="Red")
 
 filter(crimes3, `Crm.Cd.Desc`=="BATTERY - SIMPLE ASSAULT") %>%
 ggplot( aes(y=`Weapon.Desc`)) +
-  geom_bar()
+  geom_bar(fill="Red")
 
 filter(crimes2, `Weapon.Desc`=="STRONG-ARM (HANDS, FIST, FEET OR BODILY FORCE)") %>%
 ggplot( aes(y=`Crm.Cd.Desc`)) +
-  geom_bar()
+  geom_bar(fill = "Red")
 
 filter(crimes2, `Weapon.Desc`=="") %>%
 ggplot( aes(y=`Crm.Cd.Desc`)) +
-  geom_bar()
+  geom_bar(fill = "Red")
 
 df <- crimes %>% group_by(`Crm.Cd.Desc`) %>%
   count(`Weapon.Desc`) %>% arrange() %>% filter(`n` == max(`n`))
@@ -385,6 +385,6 @@ ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`), text = `Weapon.Desc`) +
 toKeep <- tail(crimes %>% group_by(`Weapon.Desc`) %>% count() %>% arrange(`n`),20)
 crimes <- filter(crimes, `Weapon.Desc` %in% toKeep$Weapon.Desc)
 ggplot(crimes, aes(y=`Weapon.Desc`)) +
-  geom_bar()
+  geom_bar(fill = "Red")
 
 ```

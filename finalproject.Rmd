@@ -145,6 +145,7 @@ ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Sex)) +
          x = "Count",
          y = "Crime")
 ```
+
 We can see in the chart that there is one obvious outlier. The VEHICLE - STOLEN crime, while the most common, is comprised almost entirely of blank values for Vict.Sex. One potential reason for this could be anonymous calls, but it is unlikely to have an effect of this magnitude. Let's filter our dataset to exclude the crimes which have no Vict.Sex values, likely representing a forgotten value when filling out forms and thus an incomplete record.
 
 ```{r}
@@ -157,6 +158,7 @@ ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Sex)) +
          x = "Crime",
          y = "Count")
 ```
+
 That looks better. Men are more likely to be victims of weapon brandishing, robbery, grand theft from auto, and assault with deadly weapons/aggravated assault. Women are more likely to be victims of restraining order violations, and intimate partner aggravated and simple assault. The rest of the crimes are fairly even. Many of the robbery-esque crimes have a significant portion of unknown victims, which I could only assume would result from discovery of stolen goods upon an unrelated arrest. In only 14 cases, the victims sex is listed as "H", which I infer means intersex.
 
 Next, lets compare the relationship between victim descent and type of crime committed.
@@ -185,6 +187,7 @@ The large percentages of Hispanic victims seen in the chart and in the table can
 
 
 Next, we compare the relationship between victim age and type of crime committed.
+
 ```{r}
 demo <- demo %>% filter(Vict.Age > 0)
 
@@ -197,6 +200,7 @@ ggplot(demo, aes(x = Vict.Age)) +
   theme_minimal() +
   theme(strip.text.x = element_text(hjust = 0, size = 5))
 ```
+
 Most of these charts are skewed right but display a shockingly wide range of values. Lets look a little bit deeper.
 
 ```{r}
@@ -204,6 +208,7 @@ mage <- demo %>% group_by(`Crm.Cd.Desc`) %>% summarise(mean_age = mean(`Vict.Age
 
 mage
 ```
+
 The minimum and maximum ages are a little bit suspect here. I'm not sure why or how to account for them, but I do know that it is very unlikely that a 10 year old was the victim of grand theft from a motor vehicle. The fact that almost all of them have a maximum victim age of 99 is a little strange, but can be explained at least a little bit by the two digit cap on age in the dataset. Still, it is unlikely that 99+ year old people were the victims of all these crimes, given their low percentage of the population and low mobility.
 
 ```{r}

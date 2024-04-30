@@ -29,55 +29,55 @@ crimes %>% head()
 
 A description of the dataset and each column can be found at <https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data>. The variables in the dataset are as follows:
 
-- **DR_NO**: Division of Records Number: Official file number made up of a 2 digit year, area ID, and 5 digits. This variable has type int.
+-   **DR_NO**: Division of Records Number: Official file number made up of a 2 digit year, area ID, and 5 digits. This variable has type int.
 
-- **Date.Rptd**: The date the crime was reported, of type character.
+-   **Date.Rptd**: The date the crime was reported, of type character.
 
-- **DATE.OCC**: The date the crime occurred, of type character.
+-   **DATE.OCC**: The date the crime occurred, of type character.
 
-- **TIME.OCC**: The time the crime occurred, in 24h military time, of type int.
+-   **TIME.OCC**: The time the crime occurred, in 24h military time, of type int.
 
-- **AREA**: The LAPD has 21 Community Police Stations referred to as Geographic Areas within the department. These Geographic Areas are sequentially numbered from 1-21. This variable is of type int.
+-   **AREA**: The LAPD has 21 Community Police Stations referred to as Geographic Areas within the department. These Geographic Areas are sequentially numbered from 1-21. This variable is of type int.
 
-- **AREA.NAME**: The 21 Geographic Areas or Patrol Divisions are also given a name designation that references a landmark or the surrounding community that it is responsible for. Of type chr.
+-   **AREA.NAME**: The 21 Geographic Areas or Patrol Divisions are also given a name designation that references a landmark or the surrounding community that it is responsible for. Of type chr.
 
-- **Rpt.Dist.No**: A four-digit code that represents a sub-area within a Geographic Area. All crime records reference the "RD" that is occurred in for statistical comparisons. Of type int.
+-   **Rpt.Dist.No**: A four-digit code that represents a sub-area within a Geographic Area. All crime records reference the "RD" that is occurred in for statistical comparisons. Of type int.
 
-- **Part.1.2**: Unknown. Of type int.
+-   **Part.1.2**: Unknown. Of type int.
 
-- **Crm.Cd**: Indicates the crime committed, of type int. (Same as Crime Code 1)
+-   **Crm.Cd**: Indicates the crime committed, of type int. (Same as Crime Code 1)
 
-- **Crm.Cd.Desc**: Defines the crime code provided, of type chr.
+-   **Crm.Cd.Desc**: Defines the crime code provided, of type chr.
 
-- **Mocodes**: Modus Operandi: Activites associated with the suspect in commission of the crime. Unknown what these mean. Of type chr.
+-   **Mocodes**: Modus Operandi: Activites associated with the suspect in commission of the crime. Unknown what these mean. Of type chr.
 
-- **Vict.Age**: The age of the victim, of type int.
+-   **Vict.Age**: The age of the victim, of type int.
 
-- **Vict.Sex**: The sex of the victim, of type chr. X means unknown.
+-   **Vict.Sex**: The sex of the victim, of type chr. X means unknown.
 
-- **Vict.Descent**: The descent of the victim, of type chr: A - Other Asian B - Black C - Chinese D - Cambodian F - Filipino G - Guamanian H - Hispanic/Latin/Mexican I - American Indian/Alaskan Native J - Japanese K - Korean L - Laotian O - Other P - Pacific Islander S - Samoan U - Hawaiian V - Vietnamese W - White X - Unknown Z - Asian Indian
+-   **Vict.Descent**: The descent of the victim, of type chr: A - Other Asian B - Black C - Chinese D - Cambodian F - Filipino G - Guamanian H - Hispanic/Latin/Mexican I - American Indian/Alaskan Native J - Japanese K - Korean L - Laotian O - Other P - Pacific Islander S - Samoan U - Hawaiian V - Vietnamese W - White X - Unknown Z - Asian Indian
 
-- **Premis.Cd**: The type of structure, vehicle, or location where the crime took place, of type int.
+-   **Premis.Cd**: The type of structure, vehicle, or location where the crime took place, of type int.
 
-- **Premis.Desc**: Defines the premise code, of type chr.
+-   **Premis.Desc**: Defines the premise code, of type chr.
 
-- **Weapon.Used.Cd**: The type of weapon used in the crime, of type int.
+-   **Weapon.Used.Cd**: The type of weapon used in the crime, of type int.
 
-- **Weapon.Desc**: Defines the weapon code provided, of type chr.
+-   **Weapon.Desc**: Defines the weapon code provided, of type chr.
 
-- **Status**: Status of the case (IC is the default), of type chr.
+-   **Status**: Status of the case (IC is the default), of type chr.
 
-- **Status.Desc**: Defines the status code provided, of type chr.
+-   **Status.Desc**: Defines the status code provided, of type chr.
 
-- **Crm.Cd.1/2/3/4**: Indicates the crime committed, of type int. Crime Code 1 is the primary and most serious one. Crime Code 2, 3, and 4 are respectively less serious offenses. Lower crime class numbers are more serious.
+-   **Crm.Cd.1/2/3/4**: Indicates the crime committed, of type int. Crime Code 1 is the primary and most serious one. Crime Code 2, 3, and 4 are respectively less serious offenses. Lower crime class numbers are more serious.
 
-- **LOCATION**: Street address of crime incident rounded to the nearest hundred block to maintain anonymity, of type chr.
+-   **LOCATION**: Street address of crime incident rounded to the nearest hundred block to maintain anonymity, of type chr.
 
-- **Cross.Street**: Cross street of rounded address, of type chr.
+-   **Cross.Street**: Cross street of rounded address, of type chr.
 
-- **LAT**: Latitude, of type num.
+-   **LAT**: Latitude, of type num.
 
-- **LON**: Longitude, of type num.
+-   **LON**: Longitude, of type num.
 
 ## Our questions:
 
@@ -158,6 +158,7 @@ ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Sex)) +
          x = "Count",
          y = "Crime")
 ```
+
 We can see in the chart that there is one obvious outlier. The VEHICLE - STOLEN crime, while the most common, is comprised almost entirely of blank values for Vict.Sex. One potential reason for this could be anonymous calls, but it is unlikely to have an effect of this magnitude. Let's filter our dataset to exclude the crimes which have no Vict.Sex values, likely representing a forgotten value when filling out forms and thus an incomplete record.
 
 ```{r}
@@ -170,9 +171,11 @@ ggplot(demo, aes(x = Crm.Cd.Desc, fill = Vict.Sex)) +
          x = "Crime",
          y = "Count")
 ```
+
 That looks better. Men are more likely to be victims of weapon brandishing, robbery, grand theft from auto, and assault with deadly weapons/aggravated assault. Women are more likely to be victims of restraining order violations, and intimate partner aggravated and simple assault. The rest of the crimes are fairly even. Many of the robbery-esque crimes have a significant portion of unknown victims, which I could only assume would result from discovery of stolen goods upon an unrelated arrest. In only 14 cases, the victims sex is listed as "H", which I infer means intersex.
 
 Next, lets compare the relationship between victim descent and type of crime committed.
+
 ```{r}
 demo <- demo %>% filter(Vict.Descent != "")
 
@@ -196,8 +199,8 @@ demo %>% group_by(`Crm.Cd.Desc`) %>%
 
 The large percentages of Hispanic victims seen in the chart and in the table can be explained by the large Hispanic population of Los Angeles.
 
-
 Next, we compare the relationship between victim age and type of crime committed.
+
 ```{r}
 demo <- demo %>% filter(Vict.Age > 0)
 
@@ -210,6 +213,7 @@ ggplot(demo, aes(x = Vict.Age)) +
   theme_minimal() +
   theme(strip.text.x = element_text(hjust = 0, size = 5))
 ```
+
 Most of these charts are skewed right but display a shockingly wide range of values. Lets look a little bit deeper.
 
 ```{r}
@@ -217,6 +221,7 @@ mage <- demo %>% group_by(`Crm.Cd.Desc`) %>% summarise(mean_age = mean(`Vict.Age
 
 mage
 ```
+
 The minimum and maximum ages are a little bit suspect here. I'm not sure why or how to account for them, but I do know that it is very unlikely that a 10 year old was the victim of grand theft from a motor vehicle. The fact that almost all of them have a maximum victim age of 99 is a little strange, but can be explained at least a little bit by the two digit cap on age in the dataset. Still, it is unlikely that 99+ year old people were the victims of all these crimes, given their low percentage of the population and low mobility.
 
 ```{r}
@@ -228,6 +233,7 @@ ggplot(mage, aes(x = reorder(Crm.Cd.Desc, mean_age), y = `mean_age`)) +
        y = "Mean Age") +
   theme_minimal()
 ```
+
 ```{r}
 ggplot(mage, aes(x = reorder(Crm.Cd.Desc, min_age), y = `min_age`)) + 
   geom_bar(stat="identity") + 
@@ -330,7 +336,6 @@ unique_descents <- unique(crimes$`Vict.Descent`)
 colors <- c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999", "#e7298a", "#66c2a5", "#8da0cb", "#e78ac3", "#fc8d62", "#b3b3b3", "#fdb462", "#bebada", "#fb8072", "#8dd3c7")
 ```
 
-
 ```{r}
 ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
   geom_histogram(stat = "count") +
@@ -347,7 +352,7 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
 
 ## Relationship between Weapon and Crime
 
-Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup. Attempted to do a facet wrap but there were too many variables, even after reducing variables it was difficult to make the graph readable. 
+Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup. Attempted to do a facet wrap but there were too many variables, even after reducing variables it was difficult to make the graph readable.
 
 ```{r}
 library(ggplot2)
@@ -380,4 +385,5 @@ ggplot(crimes, aes(y=`Weapon.Desc`)) +
   geom_bar()
 
 ```
->>>>>>> 7507178d4c112f4735c0b918f9f2652a58d8c0eb
+
+> > > > > > > 7507178d4c112f4735c0b918f9f2652a58d8c0eb

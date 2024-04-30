@@ -349,7 +349,7 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
 
 ## Relationship between Weapon and Crime
 
-Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup. Attempted to do a facet wrap but there were too many variables, even after reducing variables it was difficult to make the graph readable. 
+Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup. Attempted to do a facet wrap but there were too many variables, even after reducing variables it was difficult to make the graph readable.
 
 
 ```{r}

@@ -232,8 +232,9 @@ ggplot( aes(y=`Weapon.Desc`)) +
 df <- crimes %>% group_by(`Crm.Cd.Desc`) %>%
   count(`Weapon.Desc`) %>% arrange() %>% filter(`n` == max(`n`))
 
-df
 ggplot(df, aes(y = `Crm.Cd.Desc`, x = `n`)) +
-  geom_col()
+  geom_col(fill ="Red") +
+  geom_text(aes(label = `Weapon.Desc`),hjust = 0,size = 2)
+df
 
 ```

@@ -122,6 +122,7 @@ crimes$Date.Rptd <- mdy_hm(crimes$Date.Rptd, tz = "America/Los_Angeles")
 #We are keeping the most common crimes and deleting the less common ones, this will make the data easier to work with
 toKeep <- tail(crimes %>% group_by(`Crm.Cd.Desc`) %>% count() %>% arrange(`n`),20)
 crimes <- filter(crimes, `Crm.Cd.Desc` %in% toKeep$Crm.Cd.Desc)
+toKeep
 ```
 
 After cleaning, we want to get some of the basic information about the dataset.
@@ -349,21 +350,27 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
 
 Trial and Error: Names were overlapping so I switched the graph to be sideways to make all the labels visible Tried using desc but it automatically followed the grouping. Arrange was easier because it didn't require me to ungroup. Attempted to do a facet wrap but there were too many variables, even after reducing variables it was difficult to make the graph readable. 
 
+
 ```{r}
 library(ggplot2)
-filter(crimes, `Crm.Cd.Desc`=="BURGLARY") %>%
+toKeep <- tail(crimes %>% group_by(`Crm.Cd.Desc`) %>% count() %>% arrange(`n`),10)
+crimes2 <- filter(crimes, `Crm.Cd.Desc` %in% toKeep$Crm.Cd.Desc)
+toKeep <- tail(crimes %>% group_by(`Weapon.Desc`) %>% count() %>% arrange(`n`),10)
+crimes3 <- filter(crimes, `Weapon.Desc` %in% toKeep$Weapon.Desc)
+
+filter(crimes3, `Crm.Cd.Desc`=="BURGLARY") %>% 
 ggplot( aes(y=`Weapon.Desc`)) +
   geom_bar()
 
-filter(crimes, `Crm.Cd.Desc`=="BATTERY - SIMPLE ASSAULT") %>%
+filter(crimes3, `Crm.Cd.Desc`=="BATTERY - SIMPLE ASSAULT") %>%
 ggplot( aes(y=`Weapon.Desc`)) +
   geom_bar()
 
-filter(crimes, `Weapon.Desc`=="STRONG-ARM (HANDS, FIST, FEET OR BODILY FORCE)") %>%
+filter(crimes2, `Weapon.Desc`=="STRONG-ARM (HANDS, FIST, FEET OR BODILY FORCE)") %>%
 ggplot( aes(y=`Crm.Cd.Desc`)) +
   geom_bar()
 
-filter(crimes, `Weapon.Desc`=="") %>%
+filter(crimes2, `Weapon.Desc`=="") %>%
 ggplot( aes(y=`Crm.Cd.Desc`)) +
   geom_bar()
 

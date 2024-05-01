@@ -288,10 +288,8 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Sex`)) +
   labs(x = "Victim Age", y = "Count", fill = "Victim Sex")
 
 ```
-<<<<<<< HEAD
-=======
+
 There distribution of male's and female's as victims are about equal if we do not take into account Descent. The number of victims peaks at age 30, and taper out. 18-30 is the age where the number grows incredibly fast
->>>>>>> c949809c68e1d9ef55d9c3e89f2c9ef04cb95960
 
 ```{r}
 ggplot(crimesWOempty, aes(x = `Vict.Descent`, fill = `Vict.Sex`)) +
@@ -319,15 +317,13 @@ median_crimes
 high_crime_ages <- names(age_freq[age_freq > median_crimes])
 high_crime_ages
 ```
-<<<<<<< HEAD
-=======
+
 The age with the most crime victims are from the age 30​
 
 The median crimes for every age is 867 people​
 
 The ages 18-66 has a higher than median count of crime victim's. Therefore they are more vulnerable to crime
 
->>>>>>> c949809c68e1d9ef55d9c3e89f2c9ef04cb95960
 
 ```{r}
 crimesWOempty <- crimesWOempty[crimesWOempty$`Vict.Age` >= 18 & crimesWOempty$`Vict.Age` <= 66 & crimesWOempty$`Vict.Descent` != "", ]
@@ -361,12 +357,9 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
   )
 ```
 
-<<<<<<< HEAD
-=======
 People of Hispanic descent are the most vulnerable to crime (Highest count of victims)​
 
 Crime victims are heavily of 3 descent, Hispanic, Black, White
->>>>>>> c949809c68e1d9ef55d9c3e89f2c9ef04cb95960
 
 ```{r}
 ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
@@ -381,9 +374,6 @@ ggplot(crimesWOempty, aes(x = `Vict.Age`, fill = `Vict.Descent`)) +
     legend.margin = margin(t = 2, r = 2, b = 2, l = 2, unit = "pt")  
   )+ facet_wrap(~ `Vict.Sex`)
 ```
-<<<<<<< HEAD
-
-=======
 African American females are more susceptible to be a crime victim, than African American males​
 
 White males are more susceptible to be a crime victim than white females, especially when they are older than 40​
@@ -430,3 +420,4 @@ crimes <- filter(crimes, `Weapon.Desc` %in% toKeep$Weapon.Desc)
 ggplot(crimes, aes(y=`Weapon.Desc`)) +
   geom_bar(fill = "Red")
 ```
+We can see from the data that violent crimes are much more likely to involve a weapon, while non-violent crimes almost always don't involve a weapon. This is what would be expected. We can also see that the most common weapon aside from no weapon is Strong-Arm. After Strong Arm, verbal threat and hand gun are the next most common. 
